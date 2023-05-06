@@ -1,8 +1,10 @@
 'use strict';
+
+
+
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    
-    await queryInterface.createTable('allcodes', {
+  up: async (queryInterface, Sequelize) => {   
+    await queryInterface.createTable('histories', {
       // id:DataTypes.STRING,
       // email: DataTypes.STRING,
       // firstName: DataTypes.STRING,
@@ -16,16 +18,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      key: {
+      patientId: {
         type: Sequelize.STRING
       },
-      type: {
+      doctorId: {
         type: Sequelize.STRING
       },
-      valueEn: {
-        type: Sequelize.STRING
-      },
-      valueVi: {
+      description: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -39,6 +38,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('allcodes');
+    await queryInterface.dropTable('histories');
   }
 };

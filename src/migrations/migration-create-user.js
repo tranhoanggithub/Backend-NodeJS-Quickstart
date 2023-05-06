@@ -2,7 +2,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     
-    await queryInterface.createTable('allcodes', {
+    await queryInterface.createTable('Users', {
       // id:DataTypes.STRING,
       // email: DataTypes.STRING,
       // firstName: DataTypes.STRING,
@@ -16,16 +16,28 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      key: {
+      email: {
         type: Sequelize.STRING
       },
-      type: {
+      password: {
         type: Sequelize.STRING
       },
-      valueEn: {
+      firstName: {
         type: Sequelize.STRING
       },
-      valueVi: {
+      lastName: {
+        type: Sequelize.STRING
+      },
+      address: {
+        type: Sequelize.STRING
+      },
+      gender: {
+        type: Sequelize.BOOLEAN
+      },
+      typeRole: {
+        type: Sequelize.STRING
+      },
+      keyRole: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -39,6 +51,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('allcodes');
+    await queryInterface.dropTable('Users');
   }
 };
