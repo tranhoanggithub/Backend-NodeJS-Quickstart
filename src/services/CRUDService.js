@@ -1,14 +1,37 @@
-let createNewUser = (data)=>{
-    console.log('data from service')
-    console.log(data)       
-}
+import bcrypt from 'bcrypt';
+import db from '../models/index'
 
-let hashUserPassword = (password)=>{
-    return new Promise((resolve, reject) => {
-    
-    })
-}
+const salt = bcrypt.genSaltSync(10);
 
-module.exports = { 
-createNewUser: createNewUser
-}
+let createNewUser = async (data) => {
+  console.log("data: ", data);
+  return new Promise(async (resolve, reject) => {
+    try {
+      let hashPasswordFromBcrypt = await hashUserPassword(data.pass);
+      await db.User.create({
+        email: data.email,
+        password: hashPasswordFromBcrypt,
+        firstName: data.firstName,
+        lastName: data.lastname,
+        address: data.address,
+        phonenumber: data.phone,
+        gender: data.gender === '1' ? true : false,
+        roleId: data.roleId
+      })
+
+      resolve('ok create a new user succeed!')
+    } catch (e) {
+      rejected(e);
+    }
+
+  })
+};
+let hashUserPassword = (password) => {
+  const salt = bcrypt.genSaltSync(10);
+  return bcrypt.hashSync(password, salt);
+};
+
+
+module.exports = {
+  createNewUser: createNewUser,
+};
