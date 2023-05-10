@@ -27,7 +27,12 @@ let postCRUD = async (req, res) => {
     console.log(message);
     return res.send("post CRUD form server");
 };
-
+let displayGetCRUD = async (req, res) => {
+    let data = await CRUDService.getAllUsers();
+    return res.render('displayCRUD.ejs', {
+        dataTable: data
+    });
+}
 // object: {
 //     key: '',
 //     value: ''
@@ -37,4 +42,5 @@ module.exports = {
     getAboutPage: getAboutPage,
     getCRUD: getCRUD,
     postCRUD: postCRUD,
+    displayGetCRUD: displayGetCRUD,
 }

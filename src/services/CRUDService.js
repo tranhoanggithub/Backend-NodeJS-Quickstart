@@ -30,8 +30,21 @@ let hashUserPassword = (password) => {
   const salt = bcrypt.genSaltSync(10);
   return bcrypt.hashSync(password, salt);
 };
+let getAllUsers = () => {
+  return new Promise((resolve, reject) => {
+    try {
+      let users = db.User.findAll({
+        raw: true,
+      })
+      resolve(users);
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
 
 
 module.exports = {
   createNewUser: createNewUser,
+  getAllUsers: getAllUsers,
 };
