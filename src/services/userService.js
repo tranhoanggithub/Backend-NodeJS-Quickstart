@@ -100,6 +100,7 @@ let checkUserEmail = (userEmail) => {
 }
 
 
+
 let createNewUser = (data) => {
     return new Promise(async (resolve, reject) => {
         try {

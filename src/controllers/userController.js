@@ -23,6 +23,7 @@ let handleLogin = async (req, res) => {
     })
 }
 
+
 let handleCreateNewUser = async (req, res) => {
     let message = await userService.createNewUser(req.body);
     console.log(message);
