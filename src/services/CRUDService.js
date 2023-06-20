@@ -65,7 +65,7 @@ let getUserInfoById = (userId) => {
   })
 }
 
-let updateUserData = (data) => {
+let updateUserData = (data) => {  
   return new Promise(async (resolve, reject) => {
     try {
       let user = await db.User.findOne({
