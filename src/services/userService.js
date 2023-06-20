@@ -1,6 +1,27 @@
 import db from "../models/index";
 import bcrypt from 'bcrypt';
 
+const salt = bcrypt.genSaltSync(10);
+// let hashUserPassword = (password) => {
+//     // const salt = bcrypt.genSaltSync(10);
+//     // return bcrypt.hashSync(password, salt);
+//     return new Promise(async (resolve, reject) => {
+//         try {
+//             let hashPassword = await bcrypt.hashSync(password, salt);
+//             resolve(hashPassword);
+//         } catch (e) {
+//             reject(e);
+//         }
+//     })
+// };
+let hashUserPassword = (password) => {
+    try {
+        let hashPassword = bcrypt.hashSync(password, salt);
+        return hashPassword;
+    } catch (e) {
+        throw e;
+    }
+};
 
 
 let handleUserLogin = (email, password) => {
@@ -47,7 +68,18 @@ let handleUserLogin = (email, password) => {
         }
     })
 }
-
+let getAllUsers = () => {
+    return new Promise((resolve, reject) => {
+        try {
+            let users = db.User.findAll({
+                raw: true,
+            })
+            resolve(users);
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 
 let checkUserEmail = (userEmail) => {
@@ -67,6 +99,106 @@ let checkUserEmail = (userEmail) => {
     })
 }
 
+
+let createNewUser = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            //check email is exist
+            let check = await checkUserEmail(data.email);
+            if (check === true) {
+                resolve({
+                    errCode: 1,
+                    message: 'Your email is already in used , Please try again'
+                })
+            }
+
+            let hashPasswordFromBcrypt = await hashUserPassword(data.password);
+            await db.User.create({
+                email: data.email,
+                password: hashPasswordFromBcrypt,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                address: data.address,
+                phonenumber: data.phonenumber,
+                gender: data.gender === '1' ? true : false,
+                roleId: data.roleId
+            })
+
+            resolve({
+                errCode: 0,
+                message: 'Ok'
+            })
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
+
+
+let deleteUser = (id) => {
+    return new Promise(async (resolve, reject) => {
+        // let check = await checkUserEmail(data.email);
+        // if (check == true) {
+        //     resolve({
+        //         errCode: 1,
+        //         message: 'Your email is already in used , Plz try another email'
+        //     })
+        // }
+        let foundUser = await db.User.findOne({
+            where: { id: id }
+        })
+        if (!foundUser) {
+            resolve({
+                errCode: 2,
+                errMessage: `The user isn't exist`
+            })
+        }
+        await foundUser.destroy();
+        resolve({
+            errCode: 0,
+            errMessage: `The user is deleted`
+        })
+    })
+}
+
+let updateUserData = (data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!data.id) {
+                resolve({
+                    errCode: 2,
+                    errMessage: 'Missing required parameter',
+                })
+            }
+            let user = await db.User.findOne({
+                where: { id: data.id },
+                raw: false
+            })
+            if (user) {
+                user.firstName = data.firstName;
+                user.lastName = data.lastName;
+                user.address = data.address;
+                await user.save();
+                resolve({
+                    errCode: 0,
+                    message: 'Update the user successfully'
+                });
+            } else {
+                resolve({
+                    errCode: 1,
+                    errMessage: 'Users not found'
+                });
+            }
+
+        } catch (e) {
+            reject(e);
+        }
+    })
+}
 module.exports = {
-    handleUserLogin: handleUserLogin
+    handleUserLogin: handleUserLogin,
+    getAllUsers: getAllUsers,
+    createNewUser: createNewUser,
+    deleteUser: deleteUser,
+    updateUserData: updateUserData
 }
