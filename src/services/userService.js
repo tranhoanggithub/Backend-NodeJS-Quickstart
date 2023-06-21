@@ -68,13 +68,39 @@ let handleUserLogin = (email, password) => {
         }
     })
 }
-let getAllUsers = () => {
-    return new Promise((resolve, reject) => {
+// let getAllUsers = () => {
+//     return new Promise((resolve, reject) => {
+//         try {
+//             let users = db.User.findAll({
+//                 raw: true,
+//             })
+//             resolve(users);
+//         } catch (e) {
+//             reject(e)
+//         }
+//     })
+// }
+let getAllUsers = (userId) => {
+    console.log('userId', userId)
+    return new Promise(async (resolve, reject) => {
         try {
-            let users = db.User.findAll({
-                raw: true,
-            })
-            resolve(users);
+            let users = '';
+            if (userId === 'All') {
+                users = await db.User.findAll({
+                    attributes: {
+                        exclude: ['password']
+                    }
+                })
+            }
+            if (userId && userId !== 'All') {
+                users = await db.User.findOne({
+                    where: { id: userId },
+                    attributes: {
+                        exclude: ['password']
+                    }
+                })
+            }
+            resolve(users)
         } catch (e) {
             reject(e)
         }
