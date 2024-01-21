@@ -81,31 +81,32 @@ let handleUserLogin = (email, password) => {
 //     })
 // }
 let getAllUsers = (userId) => {
-    console.log('userId', userId)
+    console.log('userId', userId);
     return new Promise(async (resolve, reject) => {
         try {
-            let users = '';
-            if (userId === 'All') {
+            let users = [];
+            if (userId === 'ALL') {
                 users = await db.User.findAll({
                     attributes: {
                         exclude: ['password']
                     }
-                })
+                });
             }
-            if (userId && userId !== 'All') {
+            if (userId !== 'ALL') {
                 users = await db.User.findOne({
                     where: { id: userId },
                     attributes: {
                         exclude: ['password']
                     }
-                })
+                });
             }
-            resolve(users)
+            resolve(users);
         } catch (e) {
-            reject(e)
+            reject(e);
         }
-    })
-}
+    });
+};
+
 
 
 let checkUserEmail = (userEmail) => {
