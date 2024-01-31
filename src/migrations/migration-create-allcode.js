@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    
+
     await queryInterface.createTable('allcodes', {
       // id:DataTypes.STRING,
       // email: DataTypes.STRING,
@@ -16,7 +16,7 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      key: {
+      keyMap: {
         type: Sequelize.STRING
       },
       type: {
